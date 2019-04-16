@@ -7,5 +7,12 @@
     public class Vote
     {
         public int Id { get; set; }
+
+        public Candidate Candidate { get; set; }
+
+        public Event Event { get; set; }
+
+        public User User { get; set; }
+        
     }
 }
