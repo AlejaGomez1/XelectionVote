@@ -9,8 +9,12 @@
     {
         public int Id { get; set; }
 
+        [MaxLength(60, ErrorMessage = "The {0} of the event can contain up to {1} characters")]
+        [Required]
         public string Name { get; set; }
 
+        [MaxLength(120, ErrorMessage = "The {0} of the event can contain up to {1} characters")]
+        [Required]
         public string Description { get; set; }
 
         [Display(Name = "Start Date")]

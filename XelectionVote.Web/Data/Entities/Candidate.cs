@@ -10,8 +10,12 @@
     {
         public int Id { get; set; }
 
+        [MaxLength(60, ErrorMessage = "The {0} of the event can contain up to {1} characters")]
+        [Required]
         public string Name { get; set; }
 
+        [MaxLength(300, ErrorMessage = "The {0} of the event can contain up to {1} characters")]
+        [Required]
         public string Proposal { get; set; }
 
         [Display(Name = "Image")]
