@@ -20,7 +20,7 @@ namespace XelectionVote.Web.Controllers.API
         [HttpGet]
         public IActionResult GetEvents()
         {
-            return Ok(this.eventRepository.GetAll());
+            return Ok(this.eventRepository.GetAllWithUsers());
         }
     }
 }

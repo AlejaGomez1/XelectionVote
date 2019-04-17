@@ -1,5 +1,6 @@
 ﻿namespace XelectionVote.Web.Controllers
 {
+    using System.Linq;
     using System.Threading.Tasks;
     using Data;
     using Data.Entities;
@@ -22,7 +23,7 @@
         // GET: Events
         public IActionResult Index()
         {
-            return View(this.eventRepository.GetAll());
+            return View(this.eventRepository.GetAll().OrderBy(e => e.Name));
         }
 
         // GET: Events/Details/5
