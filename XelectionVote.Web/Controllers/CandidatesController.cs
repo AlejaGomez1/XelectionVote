@@ -1,28 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using XelectionVote.Web.Data;
-using XelectionVote.Web.Data.Entities;
-
-namespace XelectionVote.Web.Controllers
+﻿namespace XelectionVote.Web.Controllers
 {
+    using System.Threading.Tasks;
+    using Data;
+    using Data.Entities;
+    using Helpers;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
+
     public class CandidatesController : Controller
     {
-        private readonly DataContext _context;
+        private readonly ICandidateRepository candidateRepository;
+        private readonly IUserHelper userHelper;
 
-        public CandidatesController(DataContext context)
+        public CandidatesController(ICandidateRepository candidateRepository, IUserHelper userHelper)
         {
-            _context = context;
+            this.candidateRepository = candidateRepository;
+            this.userHelper = userHelper;
         }
 
         // GET: Candidates
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.Candidates.ToListAsync());
+            return View(this.candidateRepository.GetAll());
         }
 
         // GET: Candidates/Details/5
@@ -33,8 +32,7 @@ namespace XelectionVote.Web.Controllers
                 return NotFound();
             }
 
-            var candidate = await _context.Candidates
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var candidate = await this.candidateRepository.GetByIdAsync(id.Value);
             if (candidate == null)
             {
                 return NotFound();
@@ -50,18 +48,18 @@ namespace XelectionVote.Web.Controllers
         }
 
         // POST: Candidates/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Proposal,ImageUrl")] Candidate candidate)
+        public async Task<IActionResult> Create(Candidate candidate)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(candidate);
-                await _context.SaveChangesAsync();
+                // TODO: Pending to change to: this.User.Identity.Name
+                candidate.User = await this.userHelper.GetUserByEmailAsync("malejalgomez@gmail.com");
+                await this.candidateRepository.CreateAsync(candidate);
                 return RedirectToAction(nameof(Index));
             }
+
             return View(candidate);
         }
 
@@ -73,36 +71,31 @@ namespace XelectionVote.Web.Controllers
                 return NotFound();
             }
 
-            var candidate = await _context.Candidates.FindAsync(id);
+            var candidate = await this.candidateRepository.GetByIdAsync(id.Value);
             if (candidate == null)
             {
                 return NotFound();
             }
+
             return View(candidate);
         }
 
         // POST: Candidates/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Proposal,ImageUrl")] Candidate candidate)
+        public async Task<IActionResult> Edit(Candidate candidate)
         {
-            if (id != candidate.Id)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(candidate);
-                    await _context.SaveChangesAsync();
+                    // TODO: Pending to change to: this.User.Identity.Name
+                    candidate.User = await this.userHelper.GetUserByEmailAsync("malejalgomez@gmail.com");
+                    await this.candidateRepository.UpdateAsync(candidate);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CandidateExists(candidate.Id))
+                    if (!await this.candidateRepository.ExistAsync(candidate.Id))
                     {
                         return NotFound();
                     }
@@ -113,6 +106,7 @@ namespace XelectionVote.Web.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+
             return View(candidate);
         }
 
@@ -124,8 +118,7 @@ namespace XelectionVote.Web.Controllers
                 return NotFound();
             }
 
-            var candidate = await _context.Candidates
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var candidate = await this.candidateRepository.GetByIdAsync(id.Value);
             if (candidate == null)
             {
                 return NotFound();
@@ -139,15 +132,10 @@ namespace XelectionVote.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var candidate = await _context.Candidates.FindAsync(id);
-            _context.Candidates.Remove(candidate);
-            await _context.SaveChangesAsync();
+            var candidate = await this.candidateRepository.GetByIdAsync(id);
+            await this.candidateRepository.DeleteAsync(candidate);
             return RedirectToAction(nameof(Index));
         }
-
-        private bool CandidateExists(int id)
-        {
-            return _context.Candidates.Any(e => e.Id == id);
-        }
     }
+
 }

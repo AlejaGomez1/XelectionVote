@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    public class Vote
+    public class Vote : IEntity
     {
         public int Id { get; set; }
 

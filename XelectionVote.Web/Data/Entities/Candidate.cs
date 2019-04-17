@@ -6,7 +6,7 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    public class Candidate
+    public class Candidate : IEntity
     {
         public int Id { get; set; }
 

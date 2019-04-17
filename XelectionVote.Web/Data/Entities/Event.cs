@@ -5,7 +5,7 @@
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
     using System.Threading.Tasks;
-    public class Event
+    public class Event : IEntity
     {
         public int Id { get; set; }
 

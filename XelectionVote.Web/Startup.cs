@@ -1,21 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using XelectionVote.Web.Data;
-using XelectionVote.Web.Data.Entities;
-
-namespace XelectionVote.Web
+﻿namespace XelectionVote.Web
 {
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+    using Data;
+    using Data.Entities;
+    using Helpers;
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -48,8 +43,14 @@ namespace XelectionVote.Web
 
             services.AddTransient<SeedDb>();
 
-            services.AddScoped<IRepository, Repository>();
-            
+            services.AddScoped<IEventRepository, EventRepository>();
+
+            services.AddScoped<ICandidateRepository, CandidateRepository>();
+
+            services.AddScoped<ICountryRepository, CountryRepository>();
+
+            services.AddScoped<IUserHelper, UserHelper>();
+
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.

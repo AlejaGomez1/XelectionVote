@@ -3,20 +3,20 @@
     using System;
     using System.Linq;
     using System.Threading.Tasks;
-    using Microsoft.AspNetCore.Identity;
     using Entities;
-
+    using Helpers;
+    using Microsoft.AspNetCore.Identity;
 
     public class SeedDb
     {
         private readonly DataContext context;
-        private readonly UserManager<User> userManager;
-        private Random random;
+        private readonly IUserHelper userHelper;
+        private readonly Random random;
 
-        public SeedDb(DataContext context, UserManager<User> userManager)
+        public SeedDb(DataContext context, IUserHelper userHelper)
         {
             this.context = context;
-            this.userManager = userManager;
+            this.userHelper = userHelper;
             this.random = new Random();
         }
 
@@ -24,7 +24,7 @@
         {
             await this.context.Database.EnsureCreatedAsync();
 
-            var user = await this.userManager.FindByEmailAsync("malejalgomez@gmail.com");
+            var user = await this.userHelper.GetUserByEmailAsync("malejalgomez@gmail.com");
             if (user == null)
             {
                 user = new User
@@ -36,7 +36,7 @@
                     PhoneNumber = "318269858"
                 };
 
-                var result = await this.userManager.CreateAsync(user, "123456");
+                var result = await this.userHelper.AddUserAsync(user, "123456");
                 if (result != IdentityResult.Success)
                 {
                     throw new InvalidOperationException("Could not create the user in seeder");
@@ -52,7 +52,7 @@
             }
         }
 
-        private void AddEvent (string name, User user)
+        private void AddEvent(string name, User user)
         {
             this.context.Events.Add(new Event
             {
