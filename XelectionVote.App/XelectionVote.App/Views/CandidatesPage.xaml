@@ -1,16 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="XelectionVote.App.Views.EventsPage"
+             x:Class="XelectionVote.App.Views.CandidatesPage"
              BindingContext="{Binding Main, Source={StaticResource Locator}}"
-             Title="Events">
+             Title="Candidates">
     <ContentPage.Content>
         <StackLayout
-            BindingContext="{Binding Events}" 
-            Padding="8"> <!--This is a instance of EventsViewModel-->
+            BindingContext="{Binding Candidates}"
+            Padding="8">
             <ListView
                 HasUnevenRows="True"
-                ItemsSource="{Binding Events}"> <!--This is a observable collection-->
+                ItemsSource="{Binding Candidates}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
@@ -20,8 +20,8 @@
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
                                 <Image
-                                    Grid.Column="0"
-                                	Source="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Xamarin-logo.svg/1200px-Xamarin-logo.svg.png"
+                                	Grid.Column="0"
+                                	Source="{Binding ImageFullPath}"
                                 	WidthRequest="100">
                                 </Image>
                                 <StackLayout
@@ -29,20 +29,12 @@
                                 	VerticalOptions="Center">
                                     <Label
                                     	FontAttributes="Bold"
-                                        FontSize="Medium"
-                                      	Text="{Binding Name}"
+                                    	FontSize="Medium"
+                                    	Text="{Binding Name}"
                                     	TextColor="Black">
                                     </Label>
                                     <Label
-                                    	Text="{Binding Description}"
-                                    	TextColor="Black">
-                                    </Label>
-                                    <Label
-                                    	Text="{Binding StartDate}"
-                                    	TextColor="Black">
-                                    </Label>
-                                    <Label
-                                    	Text="{Binding EndDate}"
+                                    	Text="{Binding Proposal}"
                                     	TextColor="Black">
                                     </Label>
                                 </StackLayout>

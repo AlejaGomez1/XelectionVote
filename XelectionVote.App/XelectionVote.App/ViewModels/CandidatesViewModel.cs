@@ -2,36 +2,33 @@
 {
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using Xamarin.Forms;
     using Common.Models;
     using Common.Services;
-    using XelectionVote.App.Views;
+    using Xamarin.Forms;
 
-    public class EventsViewModel : BaseViewModel
+    public class CandidatesViewModel : BaseViewModel
     {
-
         private readonly ApiService apiService;
-        private ObservableCollection<Event> events;
-
-        public ObservableCollection<Event> Events
+        private ObservableCollection<Candidate> candidates;
+        public ObservableCollection<Candidate> Candidates
         {
-           get { return this.events; }
-           set { this.SetValue(ref this.events, value); }
+            get { return this.candidates; }
+            set { this.SetValue(ref this.candidates, value); }
         }
 
 
-    public EventsViewModel()
+        public CandidatesViewModel()
         {
             this.apiService = new ApiService();
-            this.LoadEvents();
+            this.LoadCandidates();
         }
 
-        private async void LoadEvents()
+        private async void LoadCandidates()
         {
-            var response = await this.apiService.GetListAsync<Event>(
+            var response = await this.apiService.GetListAsync<Candidate>(
                 "https://xelectionvote.azurewebsites.net",
                 "/api",
-                "/Events");
+                "/Candidates");
 
             if (!response.IsSuccess)
             {
@@ -41,10 +38,9 @@
                     "Accept");
                 return;
             }
-            var myEvents = (List<Event>)response.Result;
-            this.Events = new ObservableCollection<Event>(myEvents);
 
+            var myCandidates = (List<Candidate>)response.Result;
+            this.Candidates = new ObservableCollection<Candidate>(myCandidates);
         }
     }
 }
-

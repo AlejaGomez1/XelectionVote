@@ -8,6 +8,8 @@
 
         public EventsViewModel Events { get; set; }
 
+        public CandidatesViewModel Candidates { get; set; }
+        
         public MainViewModel()
         {
             instance = this;
