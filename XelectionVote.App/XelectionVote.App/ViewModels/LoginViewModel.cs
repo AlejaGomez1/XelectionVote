@@ -1,11 +1,12 @@
-﻿using GalaSoft.MvvmLight.Command;
-using System;
-using System.Windows.Input;
-using Xamarin.Forms;
-
-namespace XelectionVote.App.ViewModels
+﻿namespace XelectionVote.App.ViewModels
 {
-    public class LoginViewModel
+    using GalaSoft.MvvmLight.Command;
+    using System;
+    using System.Windows.Input;
+    using Xamarin.Forms;
+    using XelectionVote.App.Views;
+
+    public class LoginViewModel : BaseViewModel
     {
         public string Email { get; set; }
 
@@ -46,11 +47,15 @@ namespace XelectionVote.App.ViewModels
                     "Accept");
                 return;
             }
-           
-                await Application.Current.MainPage.DisplayAlert(
-                    "Ok",
-                    "Fuck yeah",
-                    "Accept");
+
+            // await Application.Current.MainPage.DisplayAlert(
+            //  "Ok",
+            // "Fuck yeah",
+            // "Accept");
+
+            MainViewModel.GetInstance().Events = new EventsViewModel();
+           await Application.Current.MainPage.Navigation.PushAsync(new EventsPage());
         }
     }
 }
+

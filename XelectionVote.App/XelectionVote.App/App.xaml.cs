@@ -1,6 +1,7 @@
 ﻿using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using XelectionVote.App.ViewModels;
 using XelectionVote.App.Views;
 
 namespace XelectionVote.App
@@ -11,7 +12,8 @@ namespace XelectionVote.App
         {
             InitializeComponent();
 
-            MainPage = new NavigationPage(new LoginPage());
+            MainViewModel.GetInstance().Login = new LoginViewModel();
+            this.MainPage = new NavigationPage(new LoginPage());
         }
 
         protected override void OnStart()
