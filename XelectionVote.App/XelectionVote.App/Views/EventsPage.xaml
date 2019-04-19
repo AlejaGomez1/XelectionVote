@@ -9,6 +9,7 @@
             BindingContext="{Binding Events}" 
             Padding="8"> <!--This is a instance of EventsViewModel-->
             <ListView
+                IsRefreshing="{Binding IsRefreshing}"
                 HasUnevenRows="True"
                 ItemsSource="{Binding Events}"> <!--This is a observable collection-->
                 <ListView.ItemTemplate>

@@ -1,26 +1,31 @@
 ﻿namespace XelectionVote.App.ViewModels
 {
+    using Common.Models;
+    using Common.Services;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using Xamarin.Forms;
-    using Common.Models;
-    using Common.Services;
-    using XelectionVote.App.Views;
 
     public class EventsViewModel : BaseViewModel
     {
 
         private readonly ApiService apiService;
         private ObservableCollection<Event> events;
+        private bool isRefreshing;
 
         public ObservableCollection<Event> Events
         {
-           get { return this.events; }
-           set { this.SetValue(ref this.events, value); }
+           get => this.events;
+           set => this.SetValue(ref this.events, value);
         }
 
+        public bool IsRefreshing
+        {
+           get => this.isRefreshing;
+           set => this.SetValue(ref this.isRefreshing, value);
+        }
 
-    public EventsViewModel()
+        public EventsViewModel()
         {
             this.apiService = new ApiService();
             this.LoadEvents();
@@ -28,10 +33,14 @@
 
         private async void LoadEvents()
         {
+            this.IsRefreshing = true;
+
             var response = await this.apiService.GetListAsync<Event>(
                 "https://xelectionvote.azurewebsites.net",
                 "/api",
                 "/Events");
+
+            this.IsRefreshing = false;
 
             if (!response.IsSuccess)
             {
