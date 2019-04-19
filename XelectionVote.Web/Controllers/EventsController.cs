@@ -9,7 +9,7 @@
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
 
-    [Authorize]
+
     public class EventsController : Controller
     {
         private readonly IEventRepository eventRepository;
@@ -44,7 +44,7 @@
 
             return View(@event);
         }
-
+        [Authorize(Roles = "Admin")]
         // GET: Events/Create
         public IActionResult Create()
         {
@@ -67,6 +67,7 @@
         }
 
         // GET: Events/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -112,7 +113,7 @@
             return View(@event);
         }
 
-        // GET: Events/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)

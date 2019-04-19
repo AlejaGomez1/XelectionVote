@@ -7,6 +7,7 @@
     using Data;
     using Data.Entities;
     using Helpers;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using XelectionVote.Web.Models;
@@ -45,6 +46,7 @@
             return View(candidate);
         }
 
+        [Authorize(Roles = "Admin")]
         // GET: Candidates/Create
         public IActionResult Create()
         {
