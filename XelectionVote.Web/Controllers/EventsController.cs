@@ -8,7 +8,7 @@
     using Models;
     using System.Threading.Tasks;
 
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public class EventsController : Controller
     {
         private readonly IEventRepository eventRepository;
@@ -26,6 +26,7 @@
             return View(this.eventRepository.GetEventsWithCandidates());
         }
 
+      
         public async Task<IActionResult> DeleteCandidate(int? id)
         {
             if (id == null)
@@ -74,6 +75,7 @@
             return this.View(candidate);
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddCandidate(int? id)
         {
             if (id == null)
@@ -121,11 +123,13 @@
             return View(@event);
         }
 
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
         }
 
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Event @event)
@@ -139,6 +143,7 @@
             return View(@event);
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -154,6 +159,7 @@
             return View(@event);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Event @event)
@@ -167,6 +173,7 @@
             return View(@event);
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)

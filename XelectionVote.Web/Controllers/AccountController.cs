@@ -13,17 +13,21 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.IdentityModel.Tokens;
     using Models;
+    using XelectionVote.Web.Data;
 
     public class AccountController : Controller
     {
         private readonly IUserHelper userHelper;
+        private readonly ICountryRepository countryRepository;
         private readonly IConfiguration configuration;
 
         public AccountController(
             IUserHelper userHelper,
+            ICountryRepository countryRepository,
             IConfiguration configuration)
         {
             this.userHelper = userHelper;
+            this.countryRepository = countryRepository;
             this.configuration = configuration;
         }
 
@@ -67,7 +71,13 @@
 
         public IActionResult Register()
         {
-            return this.View();
+            var model = new RegisterNewUserViewModel
+            {
+                Countries = this.countryRepository.GetComboCountries(),
+                Cities = this.countryRepository.GetComboCities(0)
+            };
+
+            return this.View(model);
         }
 
         [HttpPost]
@@ -78,6 +88,8 @@
                 var user = await this.userHelper.GetUserByEmailAsync(model.Username);
                 if (user == null)
                 {
+                    var city = await this.countryRepository.GetCityAsync(model.CityId);
+
                     user = new User
                     {
                         FirstName = model.FirstName,
@@ -86,9 +98,11 @@
                         Stratum = model.Stratum,
                         Gender = model.Gender,
                         Bithdate = model.Bithdate,
-                        
                         Email = model.Username,
-                        UserName = model.Username
+                        UserName = model.Username,
+                        CityId = model.CityId,
+                        City = city
+
                     };
 
                     var result = await this.userHelper.AddUserAsync(user, model.Password);
@@ -127,6 +141,7 @@
         {
             var user = await this.userHelper.GetUserByEmailAsync(this.User.Identity.Name);
             var model = new ChangeUserViewModel();
+
             if (user != null)
             {
                 model.FirstName = user.FirstName;
@@ -135,9 +150,23 @@
                 model.Stratum = user.Stratum;
                 model.Gender = user.Gender;
                 model.Bithdate = user.Bithdate;
-                
+
+                var city = await this.countryRepository.GetCityAsync(user.CityId);
+                if (city != null)
+                {
+                    var country = await this.countryRepository.GetCountryAsync(city);
+                    if (country != null)
+                    {
+                        model.CountryId = country.Id;
+                        model.Cities = this.countryRepository.GetComboCities(country.Id);
+                        model.Countries = this.countryRepository.GetComboCountries();
+                        model.CityId = user.CityId;
+                    }
+                }
             }
 
+            model.Cities = this.countryRepository.GetComboCities(model.CountryId);
+            model.Countries = this.countryRepository.GetComboCountries();
             return this.View(model);
         }
 
@@ -149,13 +178,16 @@
                 var user = await this.userHelper.GetUserByEmailAsync(this.User.Identity.Name);
                 if (user != null)
                 {
+                    var city = await this.countryRepository.GetCityAsync(model.CityId);
+
                     user.FirstName = model.FirstName;
                     user.LastName = model.LastName;
                     user.Occupation = model.Occupation;
                     user.Stratum = model.Stratum;
                     user.Gender = model.Gender;
                     user.Bithdate = model.Bithdate;
-                    
+                    user.CityId = model.CityId;
+                    user.City = city;
 
                     var respose = await this.userHelper.UpdateUserAsync(user);
                     if (respose.Succeeded)
@@ -175,10 +207,7 @@
 
             return this.View(model);
         }
-        public IActionResult ChangePassword()
-        {
-            return this.View();
-        }
+
 
         [HttpPost]
         public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
@@ -253,5 +282,10 @@
             return this.View();
         }
 
+        public async Task<JsonResult> GetCitiesAsync(int countryId)
+        {
+            var country = await this.countryRepository.GetCountryWithCitiesAsync(countryId);
+            return this.Json(country.Cities.OrderBy(c => c.Name));
+        }
     }
 }

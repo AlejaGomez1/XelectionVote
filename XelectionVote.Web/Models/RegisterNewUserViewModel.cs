@@ -1,6 +1,8 @@
 ﻿namespace XelectionVote.Web.Models
 {
+    using Microsoft.AspNetCore.Mvc.Rendering;
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
     public class RegisterNewUserViewModel
@@ -24,7 +26,16 @@
         public DateTime Bithdate { get; set; }
 
         [Display(Name = "City")]
-        public int City { get; set; }
+        [Range(1, int.MaxValue, ErrorMessage = "Please select a city")]
+        public int CityId { get; set; }
+
+        public IEnumerable<SelectListItem> Cities { get; set; }
+
+        [Display(Name = "Country")]
+        [Range(1, int.MaxValue, ErrorMessage = "Please select a country")]
+        public int CountryId { get; set; }
+
+        public IEnumerable<SelectListItem> Countries { get; set; }
 
         [Required]
         [DataType(DataType.EmailAddress)]
