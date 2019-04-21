@@ -3,8 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using System.Linq;
-    using System.Threading.Tasks;
     public class Event : IEntity
     {
         public int Id { get; set; }
@@ -21,9 +19,16 @@
         public DateTime StartDate { get; set; }
 
         [Display(Name = "End Date")]
+        //[DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}", ApplyFormatInEditMode = true)]
         public DateTime EndDate { get; set; }
 
         public User User { get; set; }
 
+        public ICollection<Candidate> Candidates { get; set; }
+
+        [Display(Name = "# Candidates")]
+        public int NumberCandidates { get { return this.Candidates == null ? 0 : this.Candidates.Count; } }
+
     }
 }
+

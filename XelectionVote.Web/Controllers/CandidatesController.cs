@@ -205,6 +205,8 @@
             await this.candidateRepository.DeleteAsync(candidate);
             return RedirectToAction(nameof(Index));
         }
+
+
     }
 
 }

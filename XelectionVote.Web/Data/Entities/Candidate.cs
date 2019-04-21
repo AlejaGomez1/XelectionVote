@@ -1,10 +1,6 @@
 ﻿namespace XelectionVote.Web.Data.Entities
 {
-    using System;
-    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using System.Linq;
-    using System.Threading.Tasks;
 
     public class Candidate : IEntity
     {
@@ -21,13 +17,13 @@
         [Display(Name = "Image")]
         public string ImageUrl { get; set; }
 
-        public User User  { get; set; }
+        public User User { get; set; }
 
         public string ImageFullPath
         {
             get
             {
-                if(string.IsNullOrEmpty(this.ImageUrl))
+                if (string.IsNullOrEmpty(this.ImageUrl))
                 {
                     return null;
                 }

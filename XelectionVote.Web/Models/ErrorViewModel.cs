@@ -1,5 +1,3 @@
-using System;
-
 namespace XelectionVote.Web.Models
 {
     public class ErrorViewModel

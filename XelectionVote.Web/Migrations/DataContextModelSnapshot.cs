@@ -135,6 +135,8 @@ namespace XelectionVote.Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int?>("EventId");
+
                     b.Property<string>("ImageUrl");
 
                     b.Property<string>("Name")
@@ -149,9 +151,30 @@ namespace XelectionVote.Web.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("EventId");
+
                     b.HasIndex("UserId");
 
                     b.ToTable("Candidates");
+                });
+
+            modelBuilder.Entity("XelectionVote.Web.Data.Entities.City", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("CountryId");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CountryId");
+
+                    b.ToTable("Cities");
                 });
 
             modelBuilder.Entity("XelectionVote.Web.Data.Entities.Country", b =>
@@ -160,7 +183,9 @@ namespace XelectionVote.Web.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50);
 
                     b.HasKey("Id");
 
@@ -203,7 +228,7 @@ namespace XelectionVote.Web.Migrations
 
                     b.Property<DateTime>("Bithdate");
 
-                    b.Property<int>("Ciudad");
+                    b.Property<int>("CityId");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
@@ -252,6 +277,8 @@ namespace XelectionVote.Web.Migrations
                         .HasMaxLength(256);
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CityId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasName("EmailIndex");
@@ -334,9 +361,20 @@ namespace XelectionVote.Web.Migrations
 
             modelBuilder.Entity("XelectionVote.Web.Data.Entities.Candidate", b =>
                 {
+                    b.HasOne("XelectionVote.Web.Data.Entities.Event")
+                        .WithMany("Candidates")
+                        .HasForeignKey("EventId");
+
                     b.HasOne("XelectionVote.Web.Data.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("XelectionVote.Web.Data.Entities.City", b =>
+                {
+                    b.HasOne("XelectionVote.Web.Data.Entities.Country")
+                        .WithMany("Cities")
+                        .HasForeignKey("CountryId");
                 });
 
             modelBuilder.Entity("XelectionVote.Web.Data.Entities.Event", b =>
@@ -344,6 +382,14 @@ namespace XelectionVote.Web.Migrations
                     b.HasOne("XelectionVote.Web.Data.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("XelectionVote.Web.Data.Entities.User", b =>
+                {
+                    b.HasOne("XelectionVote.Web.Data.Entities.City", "City")
+                        .WithMany()
+                        .HasForeignKey("CityId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("XelectionVote.Web.Data.Entities.Vote", b =>

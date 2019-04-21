@@ -1,12 +1,9 @@
 ﻿namespace XelectionVote.Web.Data.Entities
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.Linq;
-    using System.Threading.Tasks;
     using Microsoft.AspNetCore.Identity;
-    
+    using System;
+    using System.ComponentModel.DataAnnotations;
+
     public class User : IdentityUser
     {
         [MaxLength(60)]
@@ -28,6 +25,9 @@
         [DataType(DataType.Date)]
         public DateTime Bithdate { get; set; }
 
-        public int Ciudad { get; set; }
+        public int CityId { get; set; }
+
+        public City City { get; set; }
     }
 }
+

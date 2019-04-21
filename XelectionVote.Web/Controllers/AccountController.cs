@@ -86,7 +86,7 @@
                         Stratum = model.Stratum,
                         Gender = model.Gender,
                         Bithdate = model.Bithdate,
-                        Ciudad = model.Ciudad,
+                        
                         Email = model.Username,
                         UserName = model.Username
                     };
@@ -135,7 +135,7 @@
                 model.Stratum = user.Stratum;
                 model.Gender = user.Gender;
                 model.Bithdate = user.Bithdate;
-                model.Ciudad = user.Ciudad;
+                
             }
 
             return this.View(model);
@@ -155,7 +155,7 @@
                     user.Stratum = model.Stratum;
                     user.Gender = model.Gender;
                     user.Bithdate = model.Bithdate;
-                    user.Ciudad = model.Ciudad;
+                    
 
                     var respose = await this.userHelper.UpdateUserAsync(user);
                     if (respose.Succeeded)
@@ -246,6 +246,11 @@
             }
 
             return this.BadRequest();
+        }
+
+        public IActionResult NotAuthorized()
+        {
+            return this.View();
         }
 
     }

@@ -24,7 +24,7 @@
         public DateTime Bithdate { get; set; }
 
         [Display(Name = "City")]
-        public int Ciudad { get; set; }
+        public int City { get; set; }
 
         [Required]
         [DataType(DataType.EmailAddress)]
@@ -41,3 +41,4 @@
     }
 
 }
+

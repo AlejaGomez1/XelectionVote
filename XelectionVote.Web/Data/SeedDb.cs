@@ -1,6 +1,7 @@
 ﻿namespace XelectionVote.Web.Data
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using Entities;
@@ -26,6 +27,27 @@
             await this.userHelper.CheckRoleAsync("Admin");
             await this.userHelper.CheckRoleAsync("Customer");
 
+
+
+
+            if (!this.context.Countries.Any())
+            {
+                var cities = new List<City>();
+                cities.Add(new City { Name = "Medellín" });
+                cities.Add(new City { Name = "Bogotá" });
+                cities.Add(new City { Name = "Calí" });
+
+                this.context.Countries.Add(new Country
+                {
+                    Cities = cities,
+                    Name = "Colombia"
+                });
+
+                await this.context.SaveChangesAsync();
+            }
+
+           
+            //Add user, is admin
             var user = await this.userHelper.GetUserByEmailAsync("malejalgomez@gmail.com");
             if (user == null)
             {
@@ -35,7 +57,9 @@
                     LastName = "Gomez",
                     Email = "malejalgomez@gmail.com",
                     UserName = "malejalgomez@gmail.com",
-                    PhoneNumber = "318269858"
+                    PhoneNumber = "318269858",
+                    CityId = this.context.Countries.FirstOrDefault().Cities.FirstOrDefault().Id,
+                    City = this.context.Countries.FirstOrDefault().Cities.FirstOrDefault()
                 };
 
                 var result = await this.userHelper.AddUserAsync(user, "123456");

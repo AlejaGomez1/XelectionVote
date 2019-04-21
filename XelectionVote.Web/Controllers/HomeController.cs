@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using XelectionVote.Web.Models;
-
-namespace XelectionVote.Web.Controllers
+﻿namespace XelectionVote.Web.Controllers
 {
+
+    using Microsoft.AspNetCore.Mvc;
+    using System.Diagnostics;
+    using XelectionVote.Web.Models;
+
     public class HomeController : Controller
     {
         public IActionResult Index()
@@ -38,6 +35,11 @@ namespace XelectionVote.Web.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+        [Route("error/404")]
+        public IActionResult Error404()
+        {
+            return View();
         }
     }
 }

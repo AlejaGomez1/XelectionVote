@@ -14,5 +14,8 @@
 
         public User User { get; set; }
         
+        //public IEnumerable<Vote>Items { get; set; }
+
+        //public double Quantity { get { return this.Items == null ? 0 : this.Items.Sum(i => i.Quantity); } }
     }
 }
